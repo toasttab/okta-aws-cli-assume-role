@@ -1,0 +1,43 @@
+apply plugin: 'java'
+
+version = '0.0.1'
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+jar {
+    from {
+        (configurations.runtime).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    manifest {
+        attributes('Main-Class': 'com.okta.tools.awscli')
+    }
+}
+
+////create a single Jar with all dependencies
+//task fatJar(type: Jar) {
+//	manifest {
+//        attributes 'Implementation-Title': 'Toast Okta',
+//        	'Implementation-Version': version,
+//        	'Main-Class': 'com.okta.tools.awscli'
+//    }
+//    baseName = project.name + '-all'
+//    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+//    with jar
+//}
+
+//Get dependencies from Maven central repository
+repositories {
+    mavenCentral()
+}
+
+//Project dependencies
+dependencies {
+    compile 'com.amazonaws:aws-java-sdk:1.11.86'
+    compile 'joda-time:joda-time:2.9.3'
+    compile group: 'com.okta', name: 'okta-sdk', version: '0.0.4', transitive: true
+    compile 'org.json:json:20170516'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.9.0'
+    // compile files('libs/oktaawscli.jar')
+}

@@ -102,7 +102,7 @@ public class awscli {
             logger.error("\nUnable to establish a connection with AWS. \nPlease verify that your OKTA_AWS_APP_URL parameter is correct and try again");
             System.exit(0);
         } catch (ClientProtocolException e) {
-            logger.error("\nNo Org found, please specify an OKTA_ORG parameter in your config.properties file");
+            logger.error("\nNo Org found, please specify an OKTA_ORG parameter in your env");
             System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
@@ -231,19 +231,25 @@ public class awscli {
     private static void extractCredentials() throws IOException {
         //BufferedReader oktaBr = new BufferedReader(new FileReader(new File (System.getProperty("user.dir")) +"/oktaAWSCLI.config"));
         //RL, 2016-02-25, moving to properties file
-        String strLocalFolder = System.getProperty("user.dir");
-        File propertiesFile = new File("config.properties");
-        FileReader reader = new FileReader(propertiesFile);
-        Properties props = new Properties();
-        props.load(reader);
+        // String strLocalFolder = System.getProperty("user.dir");
+        // File propertiesFile = new File("config.properties");
+        // FileReader reader = new FileReader(propertiesFile);
+        // Properties props = new Properties();
+        // props.load(reader);
         //Properties configFile = new Properties();
         //configFile.load(this.getClass().getClassLoader().getResourceAsStream("/config.properties"));
 
         //extract oktaOrg and oktaAWSAppURL from Okta settings file
-        oktaOrg = props.getProperty("OKTA_ORG");
-        oktaAWSAppURL = props.getProperty("OKTA_AWS_APP_URL");
-        awsIamKey = props.getProperty("AWS_IAM_KEY");
-        awsIamSecret = props.getProperty("AWS_IAM_SECRET");
+        oktaOrg = System.getenv("OKTA_ORG");
+        if (oktaOrg == null) {
+            throw new RuntimeException("Set OKTA_ORG in env");
+        }
+        oktaAWSAppURL = System.getenv("OKTA_AWS_APP_URL");
+        if (oktaAWSAppURL == null) {
+            throw new RuntimeException("Set OKTA_AWS_APP_URL in env");
+        }
+        awsIamKey = System.getenv("AWS_IAM_KEY");
+        awsIamSecret = System.getenv("AWS_IAM_SECRET");
 /*		String line = oktaBr.readLine();
         while(line!=null){
 			if(line.contains("OKTA_ORG")){
@@ -773,6 +779,7 @@ public class awscli {
         pw.println("aws_access_key_id=" + awsAccessKey);
         pw.println("aws_secret_access_key=" + awsSecretKey);
         pw.println("aws_session_token=" + awsSessionToken);
+        pw.println("aws_security_token=" + awsSessionToken);
         //pw.println();
         //pw.println();
     }
