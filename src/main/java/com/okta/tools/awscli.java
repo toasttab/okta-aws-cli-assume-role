@@ -693,8 +693,8 @@ public class awscli {
         //second, we're copying all the other profile from the original credentials file
         while ((line = br.readLine()) != null) {
 
-            if (line.equalsIgnoreCase(profileNameLine) || (lineCounter > 0 && lineCounter < 4)) {
-                //we found the line we must replace and we will skip 3 additional lines
+            if (line.equalsIgnoreCase(profileNameLine) || (lineCounter > 0 && lineCounter < 5)) {
+                //we found the line we must replace and we will skip 4 additional lines
                 ++lineCounter;
             } else {
                 if ((!line.equalsIgnoreCase("") && !line.equalsIgnoreCase("\n"))) {
